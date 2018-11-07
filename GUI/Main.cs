@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +19,8 @@ namespace GUI
         private Point antigo = new Point();
         private Pen caneta = new Pen(Color.FromArgb(0, 255, 0), 5);
         private Graphics editar;
+        private Bitmap imgfinal;
+        private Image templete;
 
         public Main()
         {
@@ -41,15 +45,15 @@ namespace GUI
         {
             Size = preset.Size;
             localArquivoTXT.Text = ImagemLoaderFD.FileName;
-            Image imagem = Image.FromFile(localArquivoTXT.Text);
-            EditorPn.Size = imagem.Size;
+            templete = Image.FromFile(localArquivoTXT.Text);
+            EditorPn.Size = templete.Size;
             Width += EditorPn.Width + 10;
-            if (imagem.Height > Height)
+            if (templete.Height > Height)
             {
-                Height = imagem.Height + 60;
+                Height = templete.Height + 60;
             }
             editar = EditorPn.CreateGraphics();
-            EditorPn.BackgroundImage = imagem;
+            EditorPn.BackgroundImage = templete;
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -59,7 +63,13 @@ namespace GUI
 
         private void SalvarBT_Click(object sender, EventArgs e)
         {
-            //Bitmap 
+            imgfinal = new Bitmap(templete.Width, templete.Height);
+            Graphics tImg = Graphics.FromImage(imgfinal);
+            Rectangle marcador = EditorPn.RectangleToScreen(EditorPn.ClientRectangle);
+            tImg.CopyFromScreen(marcador.Location, Point.Empty, templete.Size);
+            tImg.Dispose();
+            SaveFD.ShowDialog(this);
+            
         }
 
         private void EditorPn_MouseMove(object sender, MouseEventArgs e)
@@ -84,6 +94,15 @@ namespace GUI
                 caneta.Width = Convert.ToInt32(TamanhoCB.SelectedItem);
             }
             
+        }
+
+        private void SaveFD_FileOk(object sender, CancelEventArgs e)
+        {
+            if (File.Exists(SaveFD.FileName))
+            {
+                File.Delete(SaveFD.FileName);
+            }
+            imgfinal.Save(SaveFD.FileName, ImageFormat.Png);
         }
     }
 }

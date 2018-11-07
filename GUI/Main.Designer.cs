@@ -41,6 +41,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.TamanhoCB = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.SaveFD = new System.Windows.Forms.SaveFileDialog();
             this.CarregadorGB.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -163,6 +164,12 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "Tamanho:";
             // 
+            // SaveFD
+            // 
+            this.SaveFD.Filter = "Imagem PNG|*.png";
+            this.SaveFD.Title = "Escolha um local pra salvar:";
+            this.SaveFD.FileOk += new System.ComponentModel.CancelEventHandler(this.SaveFD_FileOk);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -202,6 +209,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox TamanhoCB;
+        private System.Windows.Forms.SaveFileDialog SaveFD;
     }
 }
 
